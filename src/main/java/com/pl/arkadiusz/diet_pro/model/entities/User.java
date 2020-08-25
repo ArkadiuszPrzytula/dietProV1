@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class User {
+public class User extends EntityBase {
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;

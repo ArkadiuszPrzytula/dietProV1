@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class IngredientCategory {
+public class IngredientCategory extends EntityBase {
 
     @Column(name = "ingredient_category_names", unique = true, nullable = false)
     private String ingredientName;
