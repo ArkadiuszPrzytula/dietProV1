@@ -7,6 +7,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BeansConfiguration {
+
+    /**
+     * Add ModelMapper to project as been. Can be autowired.
+     * @return ModelMapper
+     */
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();

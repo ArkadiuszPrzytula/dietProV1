@@ -8,6 +8,13 @@ import java.sql.SQLException;
 
 @Configuration
 public class H2Configuration {
+
+    /**
+     * Open the TPC port for the H2 database, so it is available remotely.
+     * @return Server
+     * @throws SQLException
+     */
+
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server h2Server() throws SQLException {
         return  Server.createTcpServer("-tcp");
