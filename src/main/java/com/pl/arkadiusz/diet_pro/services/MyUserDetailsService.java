@@ -1,4 +1,4 @@
-package com.pl.arkadiusz.diet_pro.config;
+package com.pl.arkadiusz.diet_pro.services;
 
 import com.pl.arkadiusz.diet_pro.model.entities.Privilege;
 import com.pl.arkadiusz.diet_pro.model.entities.Role;
@@ -29,17 +29,29 @@ public class MyUserDetailsService implements UserDetailsService {
         this.roleRepository = roleRepository;
     }
 
+
+    /**
+     * Method constitute user authentication system. It take username from login attempt and check if it exists in the database.
+     * If user exist, build security.core.userdetails.User on its basis.
+     * @param userName
+     * @return security.core.userdetails.User
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(userName);
         if (user.isEmpty()) {
-            return new org.springframework.security.core.userdetails.
-                    User("", "", true, true, true, true,getAuthorities(Arrays.asList(roleRepository.findByName("ROLE_USER").get())) );
+//            return new org.springframework.security.core.userdetails.
+//                    User("", "", true, true, true, true,
+//                    getAuthorities(Arrays.asList(roleRepository.findByName("ROLE_USER").get())) );
+            throw  new NoSuchFieldError();
         }
         User u = user.get();
         return new org.springframework.security.core.userdetails
-                .User(u.getUsername(), u.getPassword(), u.isEnabled(), true, true, true, getAuthorities(u.getRoles()));
+                .User(u.getUsername(), u.getPassword(), u.isEnabled(),
+                true, true, true, getAuthorities(u.getRoles()));
     }
+
 
     private Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
         return getGrantedAuthorities(getPrivileges(roles));

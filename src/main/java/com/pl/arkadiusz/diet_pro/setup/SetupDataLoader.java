@@ -6,7 +6,6 @@ import com.pl.arkadiusz.diet_pro.model.entities.User;
 import com.pl.arkadiusz.diet_pro.model.repositories.PrivilegeRepository;
 import com.pl.arkadiusz.diet_pro.model.repositories.RoleRepository;
 import com.pl.arkadiusz.diet_pro.model.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,17 +21,20 @@ import java.util.Optional;
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
     boolean alreadySetup = false;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private PrivilegeRepository privilegeRepository;
+    private final PrivilegeRepository privilegeRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    public SetupDataLoader(UserRepository userRepository, RoleRepository roleRepository, PrivilegeRepository privilegeRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.privilegeRepository = privilegeRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     /**
      * This method create all privileges and roles in database. Additionally create basic admin account and normal user

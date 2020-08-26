@@ -1,30 +1,36 @@
 package com.pl.arkadiusz.diet_pro.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pl.arkadiusz.diet_pro.services.MyUserDetailsService;
 
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final MyUserDetailsService myUserDetailService;
 
-    private final PasswordEncoder passwordEncoder;
+    private final DaoAuthenticationProvider authenticationProvider;
 
-    public SecurityConfiguration(MyUserDetailsService myUserDetailService, PasswordEncoder passwordEncoder) {
-        this.myUserDetailService = myUserDetailService;
-        this.passwordEncoder = passwordEncoder;
+
+    public SecurityConfiguration(DaoAuthenticationProvider authenticationProvider) {
+        this.authenticationProvider = authenticationProvider;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(myUserDetailService);
+        auth.authenticationProvider(authenticationProvider);
     }
+
+
+    /**
+     *  Configure access level to endpoint, based on user roles;
+     * @param http
+     * @throws Exception
+     */
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -32,17 +38,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/h2-console").permitAll()
-                .antMatchers("/h2-console/**").permitAll();
+                .antMatchers("/h2-console/**").permitAll()
+                .anyRequest().authenticated().and()
+                .formLogin();
+
 
         http.csrf().disable();
         http.headers().frameOptions().disable();
     }
 
-//    @Bean
-//    public DaoAuthenticationProvider authenticationProvider(){
-//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//        provider.setPasswordEncoder(passwordEncoder);
-//        provider.setUserDetailsService(userDetailsService);
-//        return provider;
-//    }
+
 }
