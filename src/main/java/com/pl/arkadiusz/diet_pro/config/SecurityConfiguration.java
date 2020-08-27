@@ -1,7 +1,5 @@
 package com.pl.arkadiusz.diet_pro.config;
 
-import com.pl.arkadiusz.diet_pro.services.MyUserDetailsService;
-
 import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -37,6 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/registration"). permitAll()
                 .antMatchers("/h2-console").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated().and()

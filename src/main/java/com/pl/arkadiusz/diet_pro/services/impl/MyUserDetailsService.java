@@ -1,4 +1,4 @@
-package com.pl.arkadiusz.diet_pro.services;
+package com.pl.arkadiusz.diet_pro.services.impl;
 
 import com.pl.arkadiusz.diet_pro.model.entities.Privilege;
 import com.pl.arkadiusz.diet_pro.model.entities.Role;

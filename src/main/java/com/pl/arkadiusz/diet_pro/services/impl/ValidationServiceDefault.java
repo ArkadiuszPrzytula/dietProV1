@@ -3,7 +3,9 @@ package com.pl.arkadiusz.diet_pro.services.impl;
 import com.pl.arkadiusz.diet_pro.model.repositories.UserRepository;
 import com.pl.arkadiusz.diet_pro.services.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ValidationServiceDefault implements ValidationService {
     private UserRepository userRepository;
 
@@ -20,5 +22,9 @@ public class ValidationServiceDefault implements ValidationService {
     @Override
     public boolean isUniqueUsername(String username) {
         return !userRepository.existsByUsername(username);
+    }
+    @Override
+    public boolean PasswordAndRePasswordAreTheSame(String password, String rePassword) {
+        return password.equals(rePassword);
     }
 }

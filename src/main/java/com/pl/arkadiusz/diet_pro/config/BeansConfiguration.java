@@ -1,6 +1,6 @@
 package com.pl.arkadiusz.diet_pro.config;
 
-import com.pl.arkadiusz.diet_pro.services.MyUserDetailsService;
+import com.pl.arkadiusz.diet_pro.services.impl.MyUserDetailsService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;

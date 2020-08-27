@@ -14,6 +14,7 @@ import javax.validation.ConstraintValidatorContext;
 @Scope("prototype")
 @Slf4j
 public class UniqueEmailValidatorForString implements ConstraintValidator<UniqueEmail, String> {
+
     private ValidationService validationService;
 
     @Autowired
