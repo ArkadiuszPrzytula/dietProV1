@@ -35,7 +35,7 @@ public class Privilege extends EntityBase {
         BAN_USER("BAN_USER"),
         READ_ALL("READ_ALL"),
         READ_CASUAL_ELEMENTS("READ_CASUAL_ELEMENTS"),
-        MODIFY_ALL("MODIFY_ALL");
+        MODIFY_ALL("MODIFY_ALL");;
 
         public String stringValue;
 

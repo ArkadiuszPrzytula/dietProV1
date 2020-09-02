@@ -41,6 +41,8 @@ public class RegistrationControllerTest {
     @MockBean
     RegistrationService registrationService;
 
+
+
     final String USERNAME = "testUser";
     final Long ID = 3L;
     final String EMAIL = "test@test.PL";

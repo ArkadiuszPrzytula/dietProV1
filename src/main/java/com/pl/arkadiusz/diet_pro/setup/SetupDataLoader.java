@@ -39,6 +39,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     /**
      * This method create all privileges and roles in database. Additionally create basic admin account and normal user
      * On the end method sets
+     *
      * @param contextRefreshedEvent
      */
     @Override
@@ -58,26 +59,29 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         List<Privilege> normalUserPrivileges = Arrays.asList(readCasualElements);
         createRoleIfNotFound(Role.RoleValue.ROLE_ADMIN.roleString, adminPrivileges);
         createRoleIfNotFound(Role.RoleValue.ROLE_USER.roleString, normalUserPrivileges);
+        createRoleIfNotFound(Role.RoleValue.ROLE_MODERATOR.roleString, normalUserPrivileges);
 
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword(passwordEncoder.encode("admin"));
-        admin.setEmail("admin@admin.com");
-        admin.setRoles(Arrays.asList(adminRole));
-        admin.setEnabled(true);
-        userRepository.save(admin);
+        createInitUser(Role.RoleValue.ROLE_ADMIN.roleString, "admin", "admin@admin.com", true);
 
-        Role userRole = roleRepository.findByName(Role.RoleValue.ROLE_USER.roleString).get();
-        User user = new User();
-        user.setUsername("user");
-        user.setPassword(passwordEncoder.encode("user"));
-        user.setEmail("user@user.com");
-        user.setRoles(Arrays.asList(userRole));
-        user.setEnabled(true);
-        userRepository.save(user);
+        createInitUser(Role.RoleValue.ROLE_USER.roleString, "user", "user@user.com", true);
+        createInitUser(Role.RoleValue.ROLE_USER.roleString, "inactiveUser", "inactiveUser@user.com", false);
+        createInitUser(Role.RoleValue.ROLE_MODERATOR.roleString, "inactiveModerator", "inactiveModerator@user.com", false);
 
         alreadySetup = true;
+    }
+
+    private void createInitUser(String role, String username, String email, boolean active) {
+        Role adminRole = roleRepository.findByName(role).get();
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(username));
+        user.setEmail(email);
+
+        user.setRoles(Arrays.asList(adminRole));
+        user.setEnabled(true);
+        user.setActive(active);
+        userRepository.save(user);
+
     }
 
     @Transactional

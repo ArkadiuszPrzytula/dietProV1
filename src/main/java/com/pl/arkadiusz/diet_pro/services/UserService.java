@@ -1,7 +1,10 @@
 package com.pl.arkadiusz.diet_pro.services;
 
+import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
+
 import java.util.Collection;
+import java.util.List;
 
 public interface UserService {
-    Collection<> getAllUser();
+    List<UserPlainDto> getAllUser() throws NoSuchFieldException;
 }

@@ -45,7 +45,7 @@ public class User extends EntityBase implements UserDetails {
     @Column (name = "emails", nullable = false)
     private String email;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(

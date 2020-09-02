@@ -1,9 +1,6 @@
 package com.pl.arkadiusz.diet_pro.model.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
@@ -39,6 +36,7 @@ public class Role extends EntityBase {
         this.name = name;
         this.privileges = privileges;
     }
+
 
     public enum RoleValue {
         ROLE_ADMIN("ROLE_ADMIN"), ROLE_USER("ROLE_USER"), ROLE_MODERATOR("ROLE_MODERATOR");

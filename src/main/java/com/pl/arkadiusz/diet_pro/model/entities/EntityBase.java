@@ -32,7 +32,6 @@ public class EntityBase implements Serializable {
     private void prePersist() {
         createdOn = LocalDateTime.now();
         updatedOn = null;
-        active = true;
     }
 
     @PreUpdate

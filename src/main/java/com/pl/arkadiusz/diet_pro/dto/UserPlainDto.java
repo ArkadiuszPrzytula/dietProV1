@@ -3,11 +3,16 @@ package com.pl.arkadiusz.diet_pro.dto;
 import com.pl.arkadiusz.diet_pro.model.entities.Role;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Data
 public class UserPlainDto {
     private Long id;
+
+    private LocalDateTime createdOn;
+
+    private LocalDateTime updatedOn;
 
     private boolean active;
 
@@ -17,6 +22,7 @@ public class UserPlainDto {
 
     private String email;
 
-    private Collection<Role> roles;
+  private Collection<String> name;
+
 
 }
