@@ -4,8 +4,10 @@ import com.pl.arkadiusz.diet_pro.services.impl.MyUserDetailsService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -24,6 +26,7 @@ public class BeansConfiguration {
 
     /**
      * Add ModelMapper to project as been. Can be autowired.
+     *
      * @return ModelMapper
      */
     @Bean
@@ -36,14 +39,26 @@ public class BeansConfiguration {
 
     /**
      * Default authenticationProvider. Can be autowired.
+     *
      * @return DaoAuthenticationProvider
      */
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
         provider.setUserDetailsService(myUserDetailService);
         return provider;
+    }
+
+
+    @Qualifier("dev")
+    @Bean
+    public ResourceBundleMessageSource messageSource() {
+
+        var source = new ResourceBundleMessageSource();
+        source.setBasenames("messages/label");
+        source.setUseCodeAsDefaultMessage(true);
+        return source;
     }
 
 }

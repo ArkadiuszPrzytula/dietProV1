@@ -8,9 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> getUserById(Long userId);
 
     Boolean existsByEmail(String email);
 
@@ -18,11 +20,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
-
     List<User> getAllUserByActive(boolean Active);
 
     Optional<User> findUserByUsernameAndActive(String username, boolean active);
-
 
 
     @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, attributePaths = {"user.roles"})

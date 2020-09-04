@@ -1,5 +1,6 @@
 package com.pl.arkadiusz.diet_pro.services.impl;
 
+import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.dto.UserRegisterDTO;
 import com.pl.arkadiusz.diet_pro.model.entities.Role;
 import com.pl.arkadiusz.diet_pro.model.entities.User;
@@ -40,21 +41,17 @@ public class RegistrationServiceDefault implements RegistrationService {
 
     @Override
     @Validated
-    public Long register(UserRegisterDTO userRegisterDTO) {
+    public UserPlainDto register(UserRegisterDTO userRegisterDTO) {
         User user = createNewUserToRegister(userRegisterDTO);
         User savedUser = userRepository.save(user);
-        return savedUser.getId();
+        return modelMapper.map(savedUser, UserPlainDto.class);
     }
 
     private User createNewUserToRegister(UserRegisterDTO userRegisterDTO) {
         log.debug("RegistrationService-register: to create user {}", userRegisterDTO);
         User user = modelMapper.map(userRegisterDTO, User.class);
         log.debug("RegistrationService-register: User after mapping from UserRegister: {}", user);
-        user.setEnabled(true);
         user.setActive(true);
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
         user.setPersonalData(null);
         user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
         user.setRoles(Arrays.asList(roleRepository.findByName(Role.RoleValue.ROLE_USER.roleString).get()));

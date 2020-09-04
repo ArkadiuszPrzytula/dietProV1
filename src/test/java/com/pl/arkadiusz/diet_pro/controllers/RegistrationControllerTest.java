@@ -1,6 +1,7 @@
 package com.pl.arkadiusz.diet_pro.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.dto.UserRegisterDTO;
 import com.pl.arkadiusz.diet_pro.services.RegistrationService;
 import org.junit.Before;
@@ -41,8 +42,6 @@ public class RegistrationControllerTest {
     @MockBean
     RegistrationService registrationService;
 
-
-
     final String USERNAME = "testUser";
     final Long ID = 3L;
     final String EMAIL = "test@test.PL";
@@ -57,8 +56,10 @@ public class RegistrationControllerTest {
     @Test
     public void it_should_return_created_user_location_by_id() throws Exception {
         UserRegisterDTO registeredUserDTO = getRequestRegisteredUserDTO(USERNAME, ID, EMAIL, PASSWORD, PASSWORD);
+        UserPlainDto userPlainDtoServiceResponse = new UserPlainDto();
+        userPlainDtoServiceResponse.setId(ID);
 
-        when(registrationService.register(userRegisterDTOArgumentCaptor.capture())).thenReturn(ID);
+        when(registrationService.register(userRegisterDTOArgumentCaptor.capture())).thenReturn(userPlainDtoServiceResponse);
 
         mvc.perform(post("/registration")
                 .contentType("application/json")

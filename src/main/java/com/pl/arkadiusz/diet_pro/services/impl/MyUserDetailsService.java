@@ -33,6 +33,7 @@ public class MyUserDetailsService implements UserDetailsService {
     /**
      * Method constitute user authentication system. It take username from login attempt and check if it exists in the database.
      * If user exist, build security.core.userdetails.User on its basis.
+     *
      * @param userName
      * @return security.core.userdetails.User
      * @throws UsernameNotFoundException
@@ -41,14 +42,12 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(userName);
         if (user.isEmpty()) {
-//            return new org.springframework.security.core.userdetails.
-//                    User("", "", true, true, true, true,
-//                    getAuthorities(Arrays.asList(roleRepository.findByName("ROLE_USER").get())) );
-            throw  new NoSuchFieldError();
+
+            throw new NoSuchFieldError();
         }
         User u = user.get();
         return new org.springframework.security.core.userdetails
-                .User(u.getUsername(), u.getPassword(), u.isEnabled(),
+                .User(u.getUsername(), u.getPassword(), u.isEnable(),
                 true, true, true, getAuthorities(u.getRoles()));
     }
 

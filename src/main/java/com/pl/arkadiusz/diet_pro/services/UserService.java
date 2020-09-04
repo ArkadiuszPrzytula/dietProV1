@@ -1,10 +1,20 @@
 package com.pl.arkadiusz.diet_pro.services;
 
 import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
+import com.pl.arkadiusz.diet_pro.dto.VerificationTokenDTO;
+import com.pl.arkadiusz.diet_pro.errors.TokenExpiredException;
 
-import java.util.Collection;
+
 import java.util.List;
 
 public interface UserService {
     List<UserPlainDto> getAllUser() throws NoSuchFieldException;
+
+    VerificationTokenDTO createVerificationToken(UserPlainDto user, String token);
+
+    VerificationTokenDTO getVerificationToken(String token);
+
+    boolean checkTokenExpireTime(VerificationTokenDTO verificationToken) throws TokenExpiredException;
+
+    Long verifyUser(Long userId);
 }
