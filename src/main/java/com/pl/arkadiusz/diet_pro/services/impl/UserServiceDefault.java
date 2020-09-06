@@ -65,26 +65,18 @@ public class UserServiceDefault implements UserService {
 
     @Override
     public VerificationTokenDTO createVerificationToken(UserPlainDto user, String token) {
-        System.out.println("token :" +token);
-        System.out.println("user :" +user);
         User u = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UserNotFoudException(String.valueOf(user.getId())));
-        System.out.println("Data base user : " +u);
         VerificationToken verificationToken = new VerificationToken(u, token);
-        System.out.println("token: " +verificationToken);
         VerificationToken save = tokenRepository.save(verificationToken);
-        System.out.println("saved token: " +save);
         return modelMapper.map(save, VerificationTokenDTO.class);
     }
 
-    @SneakyThrows
+
     @Override
-    public VerificationTokenDTO getVerificationToken(String token) {
+    public VerificationTokenDTO getVerificationToken(String token) throws InvalidTokenException {
         VerificationToken byToken = tokenRepository.getByToken(token).orElseThrow(InvalidTokenException::new);
-        System.out.println("getVerificationToken: " + byToken);
         VerificationTokenDTO map = modelMapper.map(byToken, VerificationTokenDTO.class);
-        System.out.println("getVerificationToken after map: " + map);
         map.setUserId(byToken.getUser().getId());
-        System.out.println("finalll " + map);
         return map;
     }
 

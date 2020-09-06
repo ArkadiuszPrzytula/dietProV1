@@ -1,4 +1,4 @@
-package com.pl.arkadiusz.diet_pro.services.impl;
+package com.pl.arkadiusz.diet_pro.services;
 
 import javax.mail.MessagingException;
 

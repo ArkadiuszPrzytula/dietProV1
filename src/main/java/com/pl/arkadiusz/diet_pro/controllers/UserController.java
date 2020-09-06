@@ -33,4 +33,10 @@ public class UserController {
         System.out.println(allUser);
         return new ResponseEntity<>(allUser, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<UserPlainDto>> getUser() {
+
+        return null;
+    }
 }

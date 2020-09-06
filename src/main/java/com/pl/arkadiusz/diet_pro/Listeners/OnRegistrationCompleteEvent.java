@@ -1,4 +1,4 @@
-package com.pl.arkadiusz.diet_pro.controllers;
+package com.pl.arkadiusz.diet_pro.Listeners;
 
 import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.model.entities.User;

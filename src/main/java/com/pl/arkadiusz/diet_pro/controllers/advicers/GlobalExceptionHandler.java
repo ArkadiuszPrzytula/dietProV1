@@ -1,6 +1,7 @@
 package com.pl.arkadiusz.diet_pro.controllers.advicers;
 
 import com.pl.arkadiusz.diet_pro.errors.CustomerErrorResponse;
+import com.pl.arkadiusz.diet_pro.errors.InvalidTokenException;
 import com.pl.arkadiusz.diet_pro.errors.TokenExpiredException;
 import com.pl.arkadiusz.diet_pro.errors.ValidErrors;
 
@@ -57,6 +58,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({AccessDeniedException.class})
 //    @ResponseStatus(code = HttpStatus.FORBIDDEN)
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ade) {
+        ade.printStackTrace();
         String error = "User: " + loggedUserService.getLoggedUserName()
                 + " attempted to access the protected URL: "
                 + servletRequest.getRequestURI();
@@ -69,11 +71,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-//    @ExceptionHandler(MissingServletRequestParameterException.class)
+    //    @ExceptionHandler(MissingServletRequestParameterException.class)
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(
             MissingServletRequestParameterException ex, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
+        ex.printStackTrace();
         String error = ex.getParameterName() + " parameter is missing";
 
         CustomerErrorResponse errorResponse =
@@ -82,13 +85,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(MethodNotAllowedException.class)
+    //    @ExceptionHandler(MethodNotAllowedException.class)
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
             HttpRequestMethodNotSupportedException ex,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
+
+        ex.printStackTrace();
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getMethod());
         builder.append(
@@ -101,13 +106,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 errorResponse, new HttpHeaders(), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-//@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    //@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
             HttpMediaTypeNotSupportedException ex,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
+
+        ex.printStackTrace();
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getContentType());
         builder.append(" media type is not supported. Supported media types are ");
@@ -134,11 +141,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(validErrors, headers, status);
     }
 
-    @ExceptionHandler(TokenExpiredException.class)
+    @ExceptionHandler(value = {TokenExpiredException.class})
     public ResponseEntity<Object> handleTokenExpireException(TokenExpiredException tex) {
-        String error = ""; //todo
+        tex.printStackTrace();
+        String error = tex.getClass().getSimpleName(); //todo
         CustomerErrorResponse errorResponse = new CustomerErrorResponse(HttpStatus.BAD_REQUEST,
                 tex.getLocalizedMessage(), error,
+                servletRequest.getRequestURI());
+        return new ResponseEntity<>(
+                errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {InvalidTokenException.class})
+    public ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException ite) {
+        ite.printStackTrace();
+        String error = ite.getClass().getSimpleName();
+        CustomerErrorResponse errorResponse = new CustomerErrorResponse(HttpStatus.BAD_REQUEST,
+                ite.getLocalizedMessage(), error,
                 servletRequest.getRequestURI());
         return new ResponseEntity<>(
                 errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);

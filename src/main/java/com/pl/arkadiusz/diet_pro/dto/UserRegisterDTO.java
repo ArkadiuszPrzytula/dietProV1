@@ -11,7 +11,7 @@ import javax.validation.constraints.*;
 public class UserRegisterDTO {
 
     @NotBlank
-    @Size(min = 3, max = 12) @UniqueUsername
+    @Size(min = 3, max = 50) @UniqueUsername
     private String username;
     @NotBlank @Email
     @UniqueEmail

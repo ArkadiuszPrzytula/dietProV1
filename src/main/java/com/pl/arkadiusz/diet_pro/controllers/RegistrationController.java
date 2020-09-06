@@ -1,8 +1,11 @@
 package com.pl.arkadiusz.diet_pro.controllers;
 
+import com.pl.arkadiusz.diet_pro.Listeners.OnRegistrationCompleteEvent;
 import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.dto.UserRegisterDTO;
 import com.pl.arkadiusz.diet_pro.dto.VerificationTokenDTO;
+import com.pl.arkadiusz.diet_pro.errors.InvalidTokenException;
+import com.pl.arkadiusz.diet_pro.errors.TokenExpiredException;
 import com.pl.arkadiusz.diet_pro.services.RegistrationService;
 import com.pl.arkadiusz.diet_pro.services.UserService;
 import lombok.SneakyThrows;
@@ -20,7 +23,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Locale;
 
 
 @Controller
@@ -51,22 +53,21 @@ public class RegistrationController {
         return ResponseEntity.created(uri).build();
     }
 
-    @SneakyThrows
+
     @GetMapping("/confirm.html")
-    public ResponseEntity<Void> confirmRegistration(WebRequest webRequest, @RequestParam("token") String token) {
-        System.out.println(token);
+    public ResponseEntity<Void> confirmRegistration(WebRequest webRequest, @RequestParam("token") String token) throws InvalidTokenException, TokenExpiredException {
         URI uri;
         Long verifyUserId =-1L;
 //        Locale locale = webRequest.getLocale();
         VerificationTokenDTO verificationToken = userService.getVerificationToken(token);
         System.out.println(verificationToken);
-        if (userService.checkTokenExpireTime(verificationToken)) {
-             verifyUserId = userService.verifyUser(verificationToken.getUserId());
+        userService.checkTokenExpireTime(verificationToken);
+        verifyUserId = userService.verifyUser(verificationToken.getUserId());
 
-        }
-        uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .replacePath("/user").path("/{id}").buildAndExpand(verifyUserId).toUri();
-        return ResponseEntity.created(uri).build();
+
+        URI uri1 = ServletUriComponentsBuilder.fromCurrentContextPath().replacePath("/user").path("/{id}").buildAndExpand(verificationToken.getUserId()).toUri();
+//        uri = ServletUriComponentsBuilder.fromCurrentContextPath().removePathExtension("/user/{id}");
+        return ResponseEntity.created(uri1).build();
     }
 
 }
