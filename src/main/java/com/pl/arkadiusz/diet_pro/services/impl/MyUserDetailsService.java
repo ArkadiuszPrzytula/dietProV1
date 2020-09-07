@@ -21,12 +21,10 @@ import java.util.*;
 public class MyUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
-    private RoleRepository roleRepository;
 
     @Autowired
-    public MyUserDetailsService(UserRepository userRepository, RoleRepository roleRepository) {
+    public MyUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
     }
 
 
