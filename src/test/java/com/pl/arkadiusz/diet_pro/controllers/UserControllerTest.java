@@ -69,7 +69,7 @@ public class UserControllerTest {
     private UserPlainDto createUser(String username, String email) {
         UserPlainDto user = new UserPlainDto();
         user.setId(++id);
-        user.setEnabled(true);
+        user.setEnable(true);
         user.setUsername(username);
         user.setEmail(email);
         user.setActive(true);

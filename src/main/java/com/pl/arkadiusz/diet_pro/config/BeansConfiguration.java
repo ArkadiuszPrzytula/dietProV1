@@ -1,5 +1,6 @@
 package com.pl.arkadiusz.diet_pro.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pl.arkadiusz.diet_pro.services.impl.MyUserDetailsService;
 
 import org.modelmapper.ModelMapper;
@@ -51,23 +52,9 @@ public class BeansConfiguration {
         return provider;
     }
 
-
-//    @Qualifier("dev")
-//    @Bean
-//    public ResourceBundleMessageSource messageSource() {
-//
-//        var source = new ResourceBundleMessageSource();
-//        source.setBasenames("messages/label");
-//        source.setUseCodeAsDefaultMessage(true);
-//        return source;
-//    }
-
-
-//    @Bean
-//    public JwtUtil jwtUtil(){
-//        return new JwtUtil();
-//    }
-
-
+    @Bean
+    ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
 
 }

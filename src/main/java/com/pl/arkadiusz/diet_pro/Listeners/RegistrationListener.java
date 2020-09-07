@@ -2,7 +2,9 @@ package com.pl.arkadiusz.diet_pro.Listeners;
 
 import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
 
+import com.pl.arkadiusz.diet_pro.dto.VerificationTokenDTO;
 import com.pl.arkadiusz.diet_pro.services.EmailService;
+import com.pl.arkadiusz.diet_pro.services.SendMailToUserService;
 import com.pl.arkadiusz.diet_pro.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
 
     @Autowired
-    private EmailService emailService;
+    private SendMailToUserService sendMailToUserService;
 
 
     @Override
@@ -40,28 +42,16 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
     private void confirmRegistration(OnRegistrationCompleteEvent onRegistrationCompleteEvent) {
         UserPlainDto user = onRegistrationCompleteEvent.getUser();
-        String token = UUID.randomUUID().toString();
-        service.createVerificationToken(user, token);
+
+        String verificationToken = service.createVerificationToken(user);
 
 
-        String recipientAddress = user.getEmail();
-        String subject = "Registration Confirmation";
-        String confirmationUrl = onRegistrationCompleteEvent.getAppUrl() + "/registration/confirm.html?token=" + token;
-
-        String previousText =
-                "\r Helo " + user.getUsername() + "! \r\n Click link below to  confirm your registration in dietPro app." +
-                        "\r\n " +
-                        "\r\n If you din't registered in our app, please skip this mail. ";
-        String txt = previousText + " \r\n http://localhost:8082" + confirmationUrl;
-
-
-        try {
-            emailService.sendMail(recipientAddress, subject, txt, false);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        String appUrl = onRegistrationCompleteEvent.getAppUrl();
+        sendMailToUserService.sendVerificationTokenToUser(appUrl, user, verificationToken);
 
 //        mailSender.send(email);
 
     }
+
+
 }

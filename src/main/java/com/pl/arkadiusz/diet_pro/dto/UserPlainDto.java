@@ -18,7 +18,7 @@ public class UserPlainDto {
 
     private String username;
 
-    private boolean enabled;
+    private boolean enable;
 
     private String email;
 

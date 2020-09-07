@@ -11,9 +11,13 @@ import java.util.List;
 public interface UserService {
     List<UserPlainDto> getAllUser() throws NoSuchFieldException;
 
-    VerificationTokenDTO createVerificationToken(UserPlainDto user, String token);
+    UserPlainDto getUserPlainDto(Long id);
+
+    String createVerificationToken(UserPlainDto user);
 
     VerificationTokenDTO getVerificationToken(String token) throws InvalidTokenException;
+
+    VerificationTokenDTO getVerificationToken(Long userId) throws InvalidTokenException;
 
     boolean checkTokenExpireTime(VerificationTokenDTO verificationToken) throws TokenExpiredException;
 

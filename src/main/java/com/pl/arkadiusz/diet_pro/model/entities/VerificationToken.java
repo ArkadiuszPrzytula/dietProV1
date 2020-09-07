@@ -1,10 +1,7 @@
 package com.pl.arkadiusz.diet_pro.model.entities;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -16,6 +13,7 @@ import java.util.Date;
 @Getter
 
 @ToString(callSuper = true)
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @Entity
 @Table(name = "verification_token")
