@@ -52,7 +52,6 @@ public class UserServiceDefault implements UserService {
         List<User> allUser;
         if (loggedUserService.checkLoggedUserAuthorities(Privilege.PrivilegeValue.READ_ALL.stringValue)) {
             allUser = userRepository.findAll();
-            System.out.println("checked");
         } else {
             allUser = userRepository.getAllUserByActive(true);
         }
@@ -62,6 +61,7 @@ public class UserServiceDefault implements UserService {
             List<String> collect = p.getRoles().stream().map(Role::getName).collect(Collectors.toList());
             map.setName(collect);
             return map;
+
         }).collect(Collectors.toList());
     }
 
@@ -72,7 +72,6 @@ public class UserServiceDefault implements UserService {
         return modelMapper.map(user, UserPlainDto.class);
 
     }
-
 
 
     @Override
