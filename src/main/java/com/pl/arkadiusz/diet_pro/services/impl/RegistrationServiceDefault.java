@@ -44,18 +44,19 @@ public class RegistrationServiceDefault implements RegistrationService {
     public UserPlainDto register(UserRegisterDTO userRegisterDTO) {
         User user = createNewUserToRegister(userRegisterDTO);
         User savedUser = userRepository.save(user);
+        log.debug("{}-register: User before save: {}",this.getClass().getSimpleName(), user);
         return modelMapper.map(savedUser, UserPlainDto.class);
     }
 
     private User createNewUserToRegister(UserRegisterDTO userRegisterDTO) {
-        log.debug("RegistrationService-register: to create user {}", userRegisterDTO);
+        log.debug("{}-create new user: to create user {}", this.getClass().getSimpleName(), userRegisterDTO);
         User user = modelMapper.map(userRegisterDTO, User.class);
-        log.debug("RegistrationService-register: User after mapping from UserRegister: {}", user);
+        log.debug("{}-create new user: User after mapping from UserRegister: {}", this.getClass().getSimpleName(), user);
         user.setActive(true);
         user.setPersonalData(null);
         user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
         user.setRoles(Arrays.asList(roleRepository.findByName(Role.RoleValue.ROLE_USER.roleString).get()));
-        log.debug("RegistrationService-register: User before save: {}", user);
+        log.debug("{}-create new user: User before save: {}",this.getClass().getSimpleName(), user);
         return user;
     }
 

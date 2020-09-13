@@ -5,7 +5,6 @@ import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.model.entities.enums.TokenType;
 import com.pl.arkadiusz.diet_pro.services.SendMailToUserService;
 import com.pl.arkadiusz.diet_pro.services.UserAccountService;
-import com.pl.arkadiusz.diet_pro.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,7 +33,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     private void confirmRegistration(OnRegistrationCompleteEvent onRegistrationCompleteEvent) {
         UserPlainDto user = onRegistrationCompleteEvent.getUser();
 
-        String verificationToken = userAccountService.createVerificationToken(user.getUsername());
+        String verificationToken = userAccountService.createTokenUsername(user.getUsername());
 
         String appUrl = onRegistrationCompleteEvent.getAppUrl();
 

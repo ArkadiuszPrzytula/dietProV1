@@ -43,7 +43,7 @@ public class AccountSecurityController {
     public ResponseEntity<Void> resentVerifyToken(@PathVariable("id") Long id) throws MessagingException, IOException {
         UserPlainDto user = userService.getUserPlainDto(id);
         if (!user.isEnable()) {
-            String token = userAccountService.createVerificationToken(user.getUsername());
+            String token = userAccountService.createTokenUsername(user.getUsername());
             URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUri();
             sendMailToUserService.sendTokenToUserFactory(uri.getPath(), user, token, TokenType.REGISTRATION_VERIFY);
             return ResponseEntity.created(uri).build();
@@ -55,7 +55,7 @@ public class AccountSecurityController {
     @GetMapping("/forgot-password.html/{email}")
     public ResponseEntity<Void> PrepareRePasswordToken(@Email @PathVariable("email") String email) throws MessagingException, IOException {
         UserPlainDto user = userService.getUserPlainDto(email);
-        String token = userAccountService.createPasswordRestartToken(user.getEmail());
+        String token = userAccountService.createTokenEmail(user.getEmail());
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUri();
         sendMailToUserService.sendTokenToUserFactory(uri.getPath(), user, token, TokenType.RE_PASSWORD);
         return ResponseEntity.created(uri).build();
@@ -65,10 +65,10 @@ public class AccountSecurityController {
     public ResponseEntity<Void> confirmRegistration(WebRequest webRequest,
                                                     @RequestParam("token") String token) throws InvalidTokenException, TokenExpiredException {
 
-
-        TokenDTO verificationToken = userAccountService.getVerificationToken(token);
+        TokenDTO verificationToken = userAccountService.getToken(token);
         userAccountService.checkTokenExpireTime(verificationToken);
         userAccountService.verifyUser(verificationToken.getUserId());
+        userAccountService.clearToken(verificationToken);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().replacePath("/user").path("/{id}")
                 .buildAndExpand(verificationToken.getUserId()).toUri();
@@ -78,8 +78,9 @@ public class AccountSecurityController {
     @PostMapping("/password-reset.html")
     public ResponseEntity<Void> restartUserPassword(@RequestParam("token") String token,
                                                     @RequestBody @Valid PasswordResetRequest passwordResetRequest) throws TokenExpiredException, InvalidTokenException {
-        TokenDTO restartToken = userAccountService.getRestartToken(token);
 
+
+        TokenDTO restartToken = userAccountService.getToken(token);
         userAccountService.checkTokenExpireTime(restartToken);
         userAccountService.editUser(restartToken.getUserId(), passwordResetRequest);
         userAccountService.clearToken(restartToken);

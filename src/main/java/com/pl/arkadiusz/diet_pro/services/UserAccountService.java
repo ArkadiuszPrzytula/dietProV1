@@ -6,22 +6,18 @@ import com.pl.arkadiusz.diet_pro.errors.InvalidTokenException;
 import com.pl.arkadiusz.diet_pro.errors.TokenExpiredException;
 
 public interface UserAccountService {
-    TokenDTO getRestartToken(String token) throws InvalidTokenException;
+    TokenDTO getToken(String token) throws InvalidTokenException;
 
-    String createVerificationToken(String user);
-
-    TokenDTO getVerificationToken(String token) throws InvalidTokenException;
-
-    TokenDTO getVerificationToken(Long userId) throws InvalidTokenException;
+    String createTokenUsername(String user);
 
     boolean checkTokenExpireTime(TokenDTO verificationToken) throws TokenExpiredException;
 
     Long verifyUser(Long userId);
 
-    String createPasswordRestartToken(String email);
+    String createTokenEmail(String email);
 
     Long editUser(Long userId, PasswordResetRequest passwordResetRequest);
 
-    void clearToken(TokenDTO token);
+    void clearToken(TokenDTO token) throws InvalidTokenException;
 
 }

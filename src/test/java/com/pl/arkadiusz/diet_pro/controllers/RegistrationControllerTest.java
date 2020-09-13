@@ -71,7 +71,7 @@ public class RegistrationControllerTest {
         tokenDTO.setToken(TOKEN);
         //when
         when(registrationService.register(userRegisterDTOArgumentCaptor.capture())).thenReturn(userPlainDtoServiceResponse);
-        when(userAccountService.createVerificationToken(userPlainDtoServiceResponse.getUsername())).thenReturn(TOKEN);
+        when(userAccountService.createTokenUsername(userPlainDtoServiceResponse.getUsername())).thenReturn(TOKEN);
 
         //then
         mvc.perform(post("/registration")

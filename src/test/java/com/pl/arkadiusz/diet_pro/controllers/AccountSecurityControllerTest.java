@@ -55,7 +55,7 @@ public class AccountSecurityControllerTest {
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setToken(TOKEN);
         tokenDTO.setUserId(ID);
-        when(userAccountService.getVerificationToken(tokenDTO.getToken())).thenReturn(tokenDTO);
+        when(userAccountService.getToken(tokenDTO.getToken())).thenReturn(tokenDTO);
 
         when(userAccountService.checkTokenExpireTime(tokenDTO)).thenReturn(true);
         when(userAccountService.verifyUser(tokenDTO.getUserId())).thenReturn(ID);
@@ -76,7 +76,7 @@ public class AccountSecurityControllerTest {
         tokenDTO.setToken(TOKEN);
         tokenDTO.setUserId(ID);
 
-        when(userAccountService.getVerificationToken(tokenCaptor.capture())).thenReturn(tokenDTO);
+        when(userAccountService.getToken(tokenCaptor.capture())).thenReturn(tokenDTO);
         when(userAccountService.checkTokenExpireTime(tokenDTO)).thenThrow(new TokenExpiredException());
         when(userAccountService.verifyUser(tokenDTO.getUserId())).thenReturn(ID);
 
@@ -98,7 +98,7 @@ public class AccountSecurityControllerTest {
         tokenDTO.setToken(TOKEN);
         tokenDTO.setUserId(ID);
 
-        when(userAccountService.getVerificationToken(tokenCaptor.capture())).thenThrow(new InvalidTokenException());
+        when(userAccountService.getToken(tokenCaptor.capture())).thenThrow(new InvalidTokenException());
         when(userAccountService.checkTokenExpireTime(tokenDTO)).thenReturn(true);
         when(userAccountService.verifyUser(tokenDTO.getUserId())).thenReturn(ID);
 

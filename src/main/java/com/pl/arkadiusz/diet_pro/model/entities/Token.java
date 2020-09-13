@@ -17,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "verification_token")
-public class VerificationToken {
+public class Token {
     private static final int EXPIRATION = 60 * 24;
 
     @Id
@@ -34,7 +34,7 @@ public class VerificationToken {
     @Column(name = "expiry_date")
     private Date expiryDate;
 
-    public VerificationToken(User user, String token) {
+    public Token(User user, String token) {
         this.user = user;
         this.token = token;
         this.expiryDate = calculatedExpiryDate();
