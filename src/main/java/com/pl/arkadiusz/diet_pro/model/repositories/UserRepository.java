@@ -12,7 +12,11 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> getUserById(Long userId);
+    Optional<User> findUserById(Long userId);
+
+    Optional<User> findUserByEmail(String email);
+
+    Optional<User> findByEmail(String email);
 
     Boolean existsByEmail(String email);
 
@@ -26,6 +30,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, attributePaths = {"user.roles"})
-    Optional<User> getSpecialByUsername(String username);
-
+    Optional<User> getUSerWithAllRollesByUsername(String username);
 }

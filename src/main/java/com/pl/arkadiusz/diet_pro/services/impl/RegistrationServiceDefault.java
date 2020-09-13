@@ -1,7 +1,7 @@
 package com.pl.arkadiusz.diet_pro.services.impl;
 
-import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
-import com.pl.arkadiusz.diet_pro.dto.UserRegisterDTO;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserRegisterDTO;
 import com.pl.arkadiusz.diet_pro.model.entities.Role;
 import com.pl.arkadiusz.diet_pro.model.entities.User;
 import com.pl.arkadiusz.diet_pro.model.repositories.RoleRepository;

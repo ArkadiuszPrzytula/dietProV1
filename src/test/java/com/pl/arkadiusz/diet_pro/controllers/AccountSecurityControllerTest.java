@@ -1,9 +1,10 @@
 package com.pl.arkadiusz.diet_pro.controllers;
 
-import com.pl.arkadiusz.diet_pro.dto.VerificationTokenDTO;
+import com.pl.arkadiusz.diet_pro.dto.userDto.TokenDTO;
 import com.pl.arkadiusz.diet_pro.errors.InvalidTokenException;
 
 import com.pl.arkadiusz.diet_pro.errors.TokenExpiredException;
+import com.pl.arkadiusz.diet_pro.services.UserAccountService;
 import com.pl.arkadiusz.diet_pro.services.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
- public class AccountSecurityControllerTest {
+public class AccountSecurityControllerTest {
     MockMvc mvc;
 
     @Autowired
@@ -40,6 +41,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     private ArgumentCaptor<String> tokenCaptor;
 
     @MockBean
+    private UserAccountService userAccountService;
+    @MockBean
     private UserService userService;
 
     @Before
@@ -49,13 +52,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void confirm_registration_should_return_link_to_user_id() throws Exception {
-        VerificationTokenDTO verificationTokenDTO = new VerificationTokenDTO();
-        verificationTokenDTO.setToken(TOKEN);
-        verificationTokenDTO.setUserId(ID);
-        when(userService.getVerificationToken(verificationTokenDTO.getToken())).thenReturn(verificationTokenDTO);
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setToken(TOKEN);
+        tokenDTO.setUserId(ID);
+        when(userAccountService.getVerificationToken(tokenDTO.getToken())).thenReturn(tokenDTO);
 
-        when(userService.checkTokenExpireTime(verificationTokenDTO)).thenReturn(true);
-        when(userService.verifyUser(verificationTokenDTO.getUserId())).thenReturn(ID);
+        when(userAccountService.checkTokenExpireTime(tokenDTO)).thenReturn(true);
+        when(userAccountService.verifyUser(tokenDTO.getUserId())).thenReturn(ID);
 
 
         mvc.perform(get("/account/confirm.html?token=" + TOKEN)
@@ -69,13 +72,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void confirm_registration_should_throws_error_when_token_expire() throws Exception {
-        VerificationTokenDTO verificationTokenDTO = new VerificationTokenDTO();
-        verificationTokenDTO.setToken(TOKEN);
-        verificationTokenDTO.setUserId(ID);
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setToken(TOKEN);
+        tokenDTO.setUserId(ID);
 
-        when(userService.getVerificationToken(tokenCaptor.capture())).thenReturn(verificationTokenDTO);
-        when(userService.checkTokenExpireTime(verificationTokenDTO)).thenThrow(new TokenExpiredException());
-        when(userService.verifyUser(verificationTokenDTO.getUserId())).thenReturn(ID);
+        when(userAccountService.getVerificationToken(tokenCaptor.capture())).thenReturn(tokenDTO);
+        when(userAccountService.checkTokenExpireTime(tokenDTO)).thenThrow(new TokenExpiredException());
+        when(userAccountService.verifyUser(tokenDTO.getUserId())).thenReturn(ID);
 
         mvc.perform(get("/account/confirm.html?token=" + TOKEN)
                 .contentType("application/json")
@@ -91,13 +94,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Test
     public void confirm_registration_should_throws_error_when_invalid_token() throws Exception {
-        VerificationTokenDTO verificationTokenDTO = new VerificationTokenDTO();
-        verificationTokenDTO.setToken(TOKEN);
-        verificationTokenDTO.setUserId(ID);
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setToken(TOKEN);
+        tokenDTO.setUserId(ID);
 
-        when(userService.getVerificationToken(tokenCaptor.capture())).thenThrow(new InvalidTokenException());
-        when(userService.checkTokenExpireTime(verificationTokenDTO)).thenReturn(true);
-        when(userService.verifyUser(verificationTokenDTO.getUserId())).thenReturn(ID);
+        when(userAccountService.getVerificationToken(tokenCaptor.capture())).thenThrow(new InvalidTokenException());
+        when(userAccountService.checkTokenExpireTime(tokenDTO)).thenReturn(true);
+        when(userAccountService.verifyUser(tokenDTO.getUserId())).thenReturn(ID);
 
         mvc.perform(get("/account/confirm.html?token=" + TOKEN)
                 .contentType("application/json")

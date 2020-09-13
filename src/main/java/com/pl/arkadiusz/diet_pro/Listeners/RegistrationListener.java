@@ -1,39 +1,30 @@
 package com.pl.arkadiusz.diet_pro.Listeners;
 
-import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
 
-import com.pl.arkadiusz.diet_pro.dto.VerificationTokenDTO;
-import com.pl.arkadiusz.diet_pro.services.EmailService;
+import com.pl.arkadiusz.diet_pro.model.entities.enums.TokenType;
 import com.pl.arkadiusz.diet_pro.services.SendMailToUserService;
+import com.pl.arkadiusz.diet_pro.services.UserAccountService;
 import com.pl.arkadiusz.diet_pro.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.MessageSource;
 
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
-import java.util.UUID;
+import java.io.IOException;
 
 @Slf4j
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
-
     @Autowired
-    private JavaMailSender mailSender;
-
-    @Autowired
-    private UserService service;
+    private UserAccountService userAccountService;
 
 
     @Autowired
     private SendMailToUserService sendMailToUserService;
-
 
     @Override
     public void onApplicationEvent(OnRegistrationCompleteEvent onRegistrationCompleteEvent) {
@@ -43,13 +34,16 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     private void confirmRegistration(OnRegistrationCompleteEvent onRegistrationCompleteEvent) {
         UserPlainDto user = onRegistrationCompleteEvent.getUser();
 
-        String verificationToken = service.createVerificationToken(user);
-
+        String verificationToken = userAccountService.createVerificationToken(user.getUsername());
 
         String appUrl = onRegistrationCompleteEvent.getAppUrl();
-        sendMailToUserService.sendVerificationTokenToUser(appUrl, user, verificationToken);
 
-//        mailSender.send(email);
+        try {
+            sendMailToUserService.sendTokenToUserFactory(appUrl, user, verificationToken, TokenType.REGISTRATION_VERIFY);
+        } catch (MessagingException | IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

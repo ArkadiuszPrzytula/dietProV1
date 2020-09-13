@@ -1,7 +1,10 @@
 package com.pl.arkadiusz.diet_pro.services.impl;
 
+import com.pl.arkadiusz.diet_pro.dto.Email;
+import com.pl.arkadiusz.diet_pro.dto.MailFiles;
 import com.pl.arkadiusz.diet_pro.services.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -9,27 +12,53 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 @Service
-public class MailServiceDefault  implements EmailService {
+public class MailServiceDefault implements EmailService {
 
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
-    @Autowired
     public MailServiceDefault(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
-//    @SendMail
+
     @Override
-    public void sendMail(String to,
-                         String subject,
-                         String text,
-                         boolean isHtmlContent) throws MessagingException {
+    public void sendHttpMail(final Email email) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-        mimeMessageHelper.setTo(to);
-        mimeMessageHelper.setSubject(subject);
-        mimeMessageHelper.setText(text, isHtmlContent);
+        MimeMessageHelper mimeMessageHelper = new
+                MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setSubject(email.getSubject());
+        mimeMessageHelper.setTo(email.getTo());
+        mimeMessageHelper.setText(email.getMessageText(), true);
+        email.getAttachments().ifPresent(addAttachments(mimeMessageHelper));
+
+
+        email.getInLinesFiles().ifPresent(addInLines(mimeMessageHelper));
         javaMailSender.send(mimeMessage);
     }
+
+    private Consumer<List<MailFiles>> addAttachments(MimeMessageHelper mimeMessageHelper) {
+        return s -> s.forEach(p -> {
+            try {
+                mimeMessageHelper.addAttachment(p.getName(), p.getResource(), p.getContext());
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private Consumer<List<MailFiles>> addInLines(MimeMessageHelper mimeMessageHelper) {
+        return s -> s.forEach(p -> {
+            try {
+                mimeMessageHelper.addInline(p.getName(), p.getResource(), p.getContext());
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+
 }

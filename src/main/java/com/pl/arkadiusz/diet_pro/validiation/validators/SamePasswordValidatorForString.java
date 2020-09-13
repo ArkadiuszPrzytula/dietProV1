@@ -1,6 +1,7 @@
 package com.pl.arkadiusz.diet_pro.validiation.validators;
 
-import com.pl.arkadiusz.diet_pro.dto.UserRegisterDTO;
+import com.pl.arkadiusz.diet_pro.dto.userDto.PasswordResetRequest;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserRegisterDTO;
 import com.pl.arkadiusz.diet_pro.services.ValidationService;
 import com.pl.arkadiusz.diet_pro.validiation.constrains.SamePassword;
 import lombok.SneakyThrows;
@@ -11,15 +12,14 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 @Component
 @Scope("prototype")
 @Slf4j
-public class SamePasswordValidatorForString implements ConstraintValidator<SamePassword, UserRegisterDTO> {
-
+public class SamePasswordValidatorForString implements ConstraintValidator<SamePassword, Object> {
     private ValidationService validationService;
+    private String passwordToValid;
+    private String rePasswordToValid;
 
     @Autowired
     public SamePasswordValidatorForString(ValidationService validationService) {
@@ -33,17 +33,25 @@ public class SamePasswordValidatorForString implements ConstraintValidator<SameP
 
     @SneakyThrows
     @Override
-    public boolean isValid(UserRegisterDTO userRegisterDTO, ConstraintValidatorContext constraintValidatorContext) {
-        if (userRegisterDTO.getPassword() == null || userRegisterDTO.getRePassword() == null) {
+    public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
+        setPasswordsToValid(value);
+        if (passwordToValid == null || rePasswordToValid == null) {
             return true;
         } else {
-
             constraintValidatorContext.buildConstraintViolationWithTemplate("Password and RePassword are not the same!")
                     .addPropertyNode("rePassword").addConstraintViolation();
-            return validationService.PasswordAndRePasswordAreTheSame(userRegisterDTO.getPassword(), userRegisterDTO.getRePassword());
-            }
-
+            return validationService.PasswordAndRePasswordAreTheSame(passwordToValid, rePasswordToValid);
         }
-
     }
+
+    private void setPasswordsToValid(Object value) {
+        if (value instanceof UserRegisterDTO) {
+            passwordToValid = ((UserRegisterDTO) value).getPassword();
+            rePasswordToValid = ((UserRegisterDTO) value).getRePassword();
+        } else if (value instanceof PasswordResetRequest) {
+            passwordToValid = ((PasswordResetRequest) value).getPassword();
+            rePasswordToValid = ((PasswordResetRequest) value).getRePassword();
+        }
+    }
+}
 

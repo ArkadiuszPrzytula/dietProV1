@@ -1,4 +1,4 @@
-package com.pl.arkadiusz.diet_pro.dto;
+package com.pl.arkadiusz.diet_pro.dto.userDto;
 
 import com.pl.arkadiusz.diet_pro.validiation.constrains.SamePassword;
 import com.pl.arkadiusz.diet_pro.validiation.constrains.UniqueEmail;

@@ -1,23 +1,17 @@
 package com.pl.arkadiusz.diet_pro.controllers;
 
 import com.pl.arkadiusz.diet_pro.Listeners.OnRegistrationCompleteEvent;
-import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
-import com.pl.arkadiusz.diet_pro.dto.UserRegisterDTO;
-import com.pl.arkadiusz.diet_pro.dto.VerificationTokenDTO;
-import com.pl.arkadiusz.diet_pro.errors.InvalidTokenException;
-import com.pl.arkadiusz.diet_pro.errors.TokenExpiredException;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserRegisterDTO;
 import com.pl.arkadiusz.diet_pro.services.RegistrationService;
-import com.pl.arkadiusz.diet_pro.services.UserService;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,12 +24,15 @@ import java.net.URI;
 public class RegistrationController {
     private final RegistrationService registrationService;
 
+    private final PasswordEncoder passwordEncoder;
+
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public RegistrationController(RegistrationService registrationService, ApplicationEventPublisher applicationEventPublisher) {
+    public RegistrationController(RegistrationService registrationService, PasswordEncoder passwordEncoder, ApplicationEventPublisher applicationEventPublisher) {
         this.registrationService = registrationService;
+        this.passwordEncoder = passwordEncoder;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 

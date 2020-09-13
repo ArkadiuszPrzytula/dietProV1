@@ -1,6 +1,6 @@
 package com.pl.arkadiusz.diet_pro.controllers;
 
-import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,9 +34,5 @@ public class UserController {
         return new ResponseEntity<>(allUser, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<UserPlainDto>> getUser() {
 
-        return null;
-    }
 }

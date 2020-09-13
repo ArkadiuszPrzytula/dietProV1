@@ -1,8 +1,8 @@
 package com.pl.arkadiusz.diet_pro.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
-import com.pl.arkadiusz.diet_pro.dto.UserRegisterDTO;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserRegisterDTO;
 import com.pl.arkadiusz.diet_pro.services.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

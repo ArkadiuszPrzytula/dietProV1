@@ -1,0 +1,51 @@
+.container {
+
+
+}
+
+.header
+{
+
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 30px;
+    text-align: center;
+}
+
+.logo {
+    width: 200px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 50px;
+    /*margin-bottom :20px;*/
+}
+
+.logo b
+{
+    color: darkgreen;
+}
+
+#wrap {
+    overflow: hidden;
+    position: relative;
+    float: left;
+}
+
+#wrap img.fake {
+    float: left;
+    visibility: hidden;
+    width: auto;
+}
+
+#img_wrap {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#img_wrap img.normal {
+    width: 70%;
+}​

@@ -1,7 +1,6 @@
 package com.pl.arkadiusz.diet_pro.Listeners;
 
-import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
-import com.pl.arkadiusz.diet_pro.model.entities.User;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.model.repositories.UserRepository;
 import lombok.Getter;
 import lombok.Setter;

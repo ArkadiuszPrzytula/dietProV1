@@ -1,15 +1,12 @@
 package com.pl.arkadiusz.diet_pro.services.impl;
 
-import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
-import com.pl.arkadiusz.diet_pro.dto.VerificationTokenDTO;
-import com.pl.arkadiusz.diet_pro.errors.InvalidTokenException;
+import com.pl.arkadiusz.diet_pro.dto.userDto.PasswordResetRequest;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.errors.UserNotFoudException;
-import com.pl.arkadiusz.diet_pro.errors.TokenExpiredException;
 import com.pl.arkadiusz.diet_pro.model.entities.Privilege;
 import com.pl.arkadiusz.diet_pro.model.entities.Role;
 import com.pl.arkadiusz.diet_pro.model.entities.User;
-import com.pl.arkadiusz.diet_pro.model.entities.VerificationToken;
-import com.pl.arkadiusz.diet_pro.model.repositories.TokenRepository;
+import com.pl.arkadiusz.diet_pro.model.repositories.VerificationTokenRepository;
 import com.pl.arkadiusz.diet_pro.model.repositories.UserRepository;
 import com.pl.arkadiusz.diet_pro.services.EmailService;
 import com.pl.arkadiusz.diet_pro.services.LoggedUserService;
@@ -32,19 +29,17 @@ public class UserServiceDefault implements UserService {
 
     private final LoggedUserService loggedUserService;
 
-    private TokenRepository tokenRepository;
 
-    private EmailService emailService;
+
 
     @Autowired
     public UserServiceDefault(UserRepository userRepository,
                               ModelMapper modelMapper,
-                              LoggedUserService loggedUserService, TokenRepository tokenRepository, EmailService emailService) {
+                              LoggedUserService loggedUserService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.loggedUserService = loggedUserService;
-        this.tokenRepository = tokenRepository;
-        this.emailService = emailService;
+
     }
 
     @Override
@@ -67,67 +62,30 @@ public class UserServiceDefault implements UserService {
 
     @Override
     public UserPlainDto getUserPlainDto(Long id) {
-        User user = userRepository.getUserById(id).orElseThrow(UserNotFoudException::new);
+        User user = getRawUserById(id);
         modelMapper.map(user, UserPlainDto.class);
         return modelMapper.map(user, UserPlainDto.class);
-
-    }
-
-
-    @Override
-    public String createVerificationToken(UserPlainDto user) {
-        String token = UUID.randomUUID().toString();
-        User u = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new UserNotFoudException(String.valueOf(user.getId())));
-        VerificationToken verificationToken = new VerificationToken(u, token);
-        Optional<VerificationToken> tokenByUser = tokenRepository.getByUser(u);
-        tokenByUser.ifPresent(value -> tokenRepository.delete(value));
-        VerificationToken save = tokenRepository.save(verificationToken);
-        return save.getToken();
-    }
-
-
-    @Override
-    public VerificationTokenDTO getVerificationToken(String token) throws InvalidTokenException {
-        System.out.println(token);
-        VerificationToken byToken = tokenRepository.getByToken(token).orElseThrow(InvalidTokenException::new);
-        VerificationTokenDTO map = modelMapper.map(byToken, VerificationTokenDTO.class);
-        map.setUserId(byToken.getUser().getId());
-        return map;
     }
 
     @Override
-    public VerificationTokenDTO getVerificationToken(Long userId) throws InvalidTokenException {
-        User user = userRepository.getUserById(userId).orElseThrow(UserNotFoudException::new);
-        Optional<VerificationToken> byUser = tokenRepository.getByUser(user);
-        if (byUser.isEmpty()) {
-            return null;
-        }
-        VerificationToken verificationToken = byUser.get();
-
-        VerificationTokenDTO map = modelMapper.map(verificationToken, VerificationTokenDTO.class);
-        map.setUserId(verificationToken.getUser().getId());
-        return map;
+    public UserPlainDto getUserPlainDto(String email) throws UserNotFoudException {
+        User user = getRawUserByEmail(email);
+        modelMapper.map(user, UserPlainDto.class);
+        return modelMapper.map(user, UserPlainDto.class);
     }
 
 
-    @Override
-    public boolean checkTokenExpireTime(VerificationTokenDTO verificationToken) throws TokenExpiredException {
-        long tokenExpireTime = verificationToken.getExpiryDate().getTime();
-        Calendar calendar = Calendar.getInstance();
-        if (tokenExpireTime - calendar.getTime().getTime() <= 0) {
-            throw new TokenExpiredException();
-        } else {
-            return true;
-        }
+
+    private User getRawUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoudException(String.valueOf("username:" + username)));
     }
 
-    @Override
-    public Long verifyUser(Long userId) {
-        System.out.println(userId);
-        User user = userRepository.getUserById(userId).orElseThrow(() -> new UserNotFoudException(String.valueOf(userId)));
-        user.setEnable(true);
-        User verifyUser = userRepository.save(user);
-        return verifyUser.getId();
+    private User getRawUserById(Long userId) {
+        return userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoudException("id:" + userId));
+    }
+
+    private User getRawUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoudException(String.valueOf("email:" + email)));
     }
 
 }

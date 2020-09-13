@@ -1,4 +1,4 @@
-package com.pl.arkadiusz.diet_pro.dto;
+package com.pl.arkadiusz.diet_pro.dto.userDto;
 
 
 import lombok.Data;

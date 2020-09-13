@@ -1,11 +1,12 @@
 package com.pl.arkadiusz.diet_pro.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pl.arkadiusz.diet_pro.dto.UserPlainDto;
-import com.pl.arkadiusz.diet_pro.dto.UserRegisterDTO;
-import com.pl.arkadiusz.diet_pro.dto.VerificationTokenDTO;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserRegisterDTO;
+import com.pl.arkadiusz.diet_pro.dto.userDto.TokenDTO;
 
 import com.pl.arkadiusz.diet_pro.services.RegistrationService;
+import com.pl.arkadiusz.diet_pro.services.UserAccountService;
 import com.pl.arkadiusz.diet_pro.services.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +47,9 @@ public class RegistrationControllerTest {
     @MockBean
     RegistrationService registrationService;
     @MockBean
+    UserAccountService userAccountService;
+
+    @MockBean
     UserService userService;
 
 
@@ -62,12 +66,12 @@ public class RegistrationControllerTest {
         userPlainDtoServiceResponse.setId(ID);
         userPlainDtoServiceResponse.setEmail(EMAIL);
 
-        VerificationTokenDTO verificationTokenDTO = new VerificationTokenDTO();
-        verificationTokenDTO.setUserId(3L);
-        verificationTokenDTO.setToken(TOKEN);
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setUserId(3L);
+        tokenDTO.setToken(TOKEN);
         //when
         when(registrationService.register(userRegisterDTOArgumentCaptor.capture())).thenReturn(userPlainDtoServiceResponse);
-        when(userService.createVerificationToken(userPlainDtoServiceResponse)).thenReturn(TOKEN);
+        when(userAccountService.createVerificationToken(userPlainDtoServiceResponse.getUsername())).thenReturn(TOKEN);
 
         //then
         mvc.perform(post("/registration")

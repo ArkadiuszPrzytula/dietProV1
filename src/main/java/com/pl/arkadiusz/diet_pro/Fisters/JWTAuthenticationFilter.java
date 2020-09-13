@@ -2,7 +2,7 @@ package com.pl.arkadiusz.diet_pro.Fisters;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pl.arkadiusz.diet_pro.dto.AuthUserRequest;
+import com.pl.arkadiusz.diet_pro.dto.userDto.AuthUserRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
