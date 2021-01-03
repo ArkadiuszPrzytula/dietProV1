@@ -31,20 +31,6 @@ public class EmailConfiguration implements ApplicationContextAware {
         return messageSource;
     }
 
-//    @Bean
-//    public FreeMarkerViewResolver freemarkerViewResolver() {
-//        FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
-//        resolver.setSuffix(".ftl");
-//        return resolver;
-//    }
-
-//    @Bean
-//    public FreeMarkerConfigurer freemarkerConfig() {
-//        FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
-//        freeMarkerConfigurer.setTemplateLoaderPath("/WEB-INF/views/mail");
-//        return freeMarkerConfigurer;
-//    }
-
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {

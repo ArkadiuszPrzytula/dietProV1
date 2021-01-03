@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Stream;
 
+@Transactional
 @Service
 public class LoggedUserServiceDefault implements LoggedUserService {
     private final RoleRepository roleRepository;

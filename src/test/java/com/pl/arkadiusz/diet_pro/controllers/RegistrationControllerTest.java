@@ -5,7 +5,9 @@ import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.dto.userDto.UserRegisterDTO;
 import com.pl.arkadiusz.diet_pro.dto.userDto.TokenDTO;
 
+import com.pl.arkadiusz.diet_pro.model.entities.enums.TokenType;
 import com.pl.arkadiusz.diet_pro.services.RegistrationService;
+import com.pl.arkadiusz.diet_pro.services.SendMailToUserService;
 import com.pl.arkadiusz.diet_pro.services.UserAccountService;
 import com.pl.arkadiusz.diet_pro.services.UserService;
 import org.junit.Before;
@@ -23,7 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static com.pl.arkadiusz.diet_pro.utils.TestUtil.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -46,8 +48,13 @@ public class RegistrationControllerTest {
 
     @MockBean
     RegistrationService registrationService;
+
     @MockBean
     UserAccountService userAccountService;
+
+    @MockBean
+    SendMailToUserService sendMailToUserService;
+
 
     @MockBean
     UserService userService;
@@ -81,6 +88,11 @@ public class RegistrationControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().exists(HttpHeaders.LOCATION))
                 .andExpect((header().string(HttpHeaders.LOCATION, "http://localhost/user/" + ID)));
+
+        verify(sendMailToUserService, times(1))
+                .sendTokenToUserFactory("", userPlainDtoServiceResponse,
+                tokenDTO.getToken(), TokenType.REGISTRATION_VERIFY);
+
     }
 
     @Test
@@ -95,8 +107,6 @@ public class RegistrationControllerTest {
                 .andExpect(jsonPath("$.path").value("/registration"))
                 .andExpect(jsonPath("$.errors.rePassword").exists());
     }
-
-
 
 
     @Test
@@ -124,6 +134,7 @@ public class RegistrationControllerTest {
                 .andExpect(jsonPath("$.path").value("/registration"))
                 .andExpect(jsonPath("$.errors.email").exists());
     }
+
 
     private UserRegisterDTO getRequestRegisteredUserDTO(String username, Long id, String email, String password, String rePassword) {
         UserRegisterDTO request = new UserRegisterDTO();

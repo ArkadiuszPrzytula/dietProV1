@@ -1,7 +1,7 @@
 package com.pl.arkadiusz.diet_pro.config;
 
-import com.pl.arkadiusz.diet_pro.Fisters.JWTAuthenticationFilter;
-import com.pl.arkadiusz.diet_pro.Fisters.JWTAuthorizationFilter;
+import com.pl.arkadiusz.diet_pro.filters.JWTAuthenticationFilter;
+import com.pl.arkadiusz.diet_pro.filters.JWTAuthorizationFilter;
 import com.pl.arkadiusz.diet_pro.services.impl.MyUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,11 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.authenticationProvider = authenticationProvider;
     }
 
-    /**
-     *  set user authentication via authentication provider as DaoAuthenticationProvider
-     * @param  auth
-     * @throws Exception
-     */
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider);
@@ -69,7 +65,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * Open api on different platform access
      * @return
      */
-
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

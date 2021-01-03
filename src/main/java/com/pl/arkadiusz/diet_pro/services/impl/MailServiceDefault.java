@@ -8,6 +8,7 @@ import com.pl.arkadiusz.diet_pro.services.EmailService;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -15,6 +16,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Transactional
 @Service
 public class MailServiceDefault implements EmailService {
 

@@ -30,7 +30,7 @@ public class UserController {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
-        System.out.println(allUser);
+        
         return new ResponseEntity<>(allUser, HttpStatus.OK);
     }
 

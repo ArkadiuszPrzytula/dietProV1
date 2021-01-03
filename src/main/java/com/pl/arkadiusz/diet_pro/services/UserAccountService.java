@@ -16,7 +16,7 @@ public interface UserAccountService {
 
     String createTokenEmail(String email);
 
-    Long editUser(Long userId, PasswordResetRequest passwordResetRequest);
+    Long changeUserPassword(Long userId, PasswordResetRequest passwordResetRequest);
 
     void clearToken(TokenDTO token) throws InvalidTokenException;
 

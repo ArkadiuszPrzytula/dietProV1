@@ -1,9 +1,11 @@
 package com.pl.arkadiusz.diet_pro.controllers;
 
 import com.pl.arkadiusz.diet_pro.dto.userDto.TokenDTO;
+import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.errors.InvalidTokenException;
 
 import com.pl.arkadiusz.diet_pro.errors.TokenExpiredException;
+import com.pl.arkadiusz.diet_pro.services.SendMailToUserService;
 import com.pl.arkadiusz.diet_pro.services.UserAccountService;
 import com.pl.arkadiusz.diet_pro.services.UserService;
 import org.junit.Before;
@@ -20,10 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static com.pl.arkadiusz.diet_pro.utils.TestUtil.ID;
-import static com.pl.arkadiusz.diet_pro.utils.TestUtil.TOKEN;
-
-import static org.mockito.Mockito.when;
+import static com.pl.arkadiusz.diet_pro.utils.TestUtil.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -44,6 +44,10 @@ public class AccountSecurityControllerTest {
     private UserAccountService userAccountService;
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private SendMailToUserService sendMailToUserService;
+
 
     @Before
     public void setup() {
@@ -68,6 +72,7 @@ public class AccountSecurityControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().exists(HttpHeaders.LOCATION))
                 .andExpect((header().string(HttpHeaders.LOCATION, "http://localhost/user/" + ID)));
+
     }
 
     @Test
@@ -113,5 +118,26 @@ public class AccountSecurityControllerTest {
                 .andExpect(jsonPath("$.message").value("invalid token"))
                 .andExpect(jsonPath("$.error").value(InvalidTokenException.class.getSimpleName()));
     }
+
+    @Test
+    public void should_send_user_verification_token_when_user_id_exist_in_database_and_user_is_not_enabled() {
+        //given
+        UserPlainDto userPlainDto = ;
+
+        //when
+        when(userService.getUserPlainDto(userPlainDto.getId()))
+
+
+    }
+
+private UserPlainDto createUserPlainDTOForTest(Long){
+    UserPlainDto userPlainDto = new UserPlainDto();
+    userPlainDto.setId();
+    userPlainDto.isEnable()
+    userPlainDto.setEmail();
+    userPlainDto.setActive();
+    userPlainDto.setGraduatesName();
+    userPlainDto.setUsername();
+}
 
 }

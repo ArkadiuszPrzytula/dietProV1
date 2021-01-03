@@ -27,11 +27,7 @@ public class BeansConfiguration {
         this.myUserDetailService = myUserDetailService;
     }
 
-    /**
-     * Add ModelMapper to project as been. Can be autowired.
-     *
-     * @return ModelMapper
-     */
+
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
@@ -39,12 +35,6 @@ public class BeansConfiguration {
         return modelMapper;
     }
 
-
-    /**
-     * Default authenticationProvider. Can be autowired.
-     *
-     * @return DaoAuthenticationProvider
-     */
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {

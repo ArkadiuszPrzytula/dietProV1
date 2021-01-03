@@ -4,7 +4,7 @@ import com.pl.arkadiusz.diet_pro.dto.userDto.PasswordResetRequest;
 import com.pl.arkadiusz.diet_pro.dto.userDto.TokenDTO;
 import com.pl.arkadiusz.diet_pro.errors.InvalidTokenException;
 import com.pl.arkadiusz.diet_pro.errors.TokenExpiredException;
-import com.pl.arkadiusz.diet_pro.errors.UserNotFoudException;
+import com.pl.arkadiusz.diet_pro.errors.UserNotFoundException;
 import com.pl.arkadiusz.diet_pro.model.entities.User;
 import com.pl.arkadiusz.diet_pro.model.entities.Token;
 import com.pl.arkadiusz.diet_pro.model.repositories.TokenRepository;
@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@Transactional
 public class UserAccountServiceDefault implements UserAccountService {
 
     private final TokenRepository tokenRepository;
@@ -95,7 +97,7 @@ public class UserAccountServiceDefault implements UserAccountService {
     }
 
     @Override
-    public Long editUser(Long userId, PasswordResetRequest passwordResetRequest) {
+    public Long changeUserPassword(Long userId, PasswordResetRequest passwordResetRequest) {
         User user = getRawUserById(userId);
         user.setPassword(passwordEncoder.encode(passwordResetRequest.getPassword()));
         User savedUser = userRepository.save(user);
@@ -111,20 +113,20 @@ public class UserAccountServiceDefault implements UserAccountService {
     }
 
     private User getRawUserByUsername(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoudException("username:" + username));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("username:" + username));
         log.debug("{}-getRawUserByUsername: receive user: {}", this.getClass().getSimpleName(), user);
         return user;
     }
 
     private User getRawUserById(Long userId) {
         User user = userRepository.findUserById(userId).orElseThrow(
-                () -> new UserNotFoudException("id:" + userId));
+                () -> new UserNotFoundException("id:" + userId));
         log.debug("{}-getRawUserById: receive user: {}", this.getClass().getSimpleName(), user);
         return user;
     }
 
     private User getRawUserByEmail(String email) {
-        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoudException("email:" + email));
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException("email:" + email));
         log.debug("{}-getRawUserByEmail: receive user: {}", this.getClass().getSimpleName(), user);
         return user;
     }

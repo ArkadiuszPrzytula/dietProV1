@@ -1,7 +1,7 @@
 package com.pl.arkadiusz.diet_pro.services.impl;
 
 import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
-import com.pl.arkadiusz.diet_pro.errors.UserNotFoudException;
+import com.pl.arkadiusz.diet_pro.errors.UserNotFoundException;
 import com.pl.arkadiusz.diet_pro.model.entities.Privilege;
 import com.pl.arkadiusz.diet_pro.model.entities.Role;
 import com.pl.arkadiusz.diet_pro.model.entities.User;
@@ -49,7 +49,7 @@ public class UserServiceDefault implements UserService {
         return allUser.stream().map(p -> {
             UserPlainDto map = modelMapper.map(p, UserPlainDto.class);
             List<String> collect = p.getRoles().stream().map(Role::getName).collect(Collectors.toList());
-            map.setName(collect);
+            map.setGraduatesName(collect);
             return map;
         }).collect(Collectors.toList());
     }
@@ -62,7 +62,7 @@ public class UserServiceDefault implements UserService {
     }
 
     @Override
-    public UserPlainDto getUserPlainDto(String email) throws UserNotFoudException {
+    public UserPlainDto getUserPlainDto(String email) throws UserNotFoundException {
         User user = getRawUserByEmail(email);
         modelMapper.map(user, UserPlainDto.class);
         return modelMapper.map(user, UserPlainDto.class);
@@ -70,15 +70,15 @@ public class UserServiceDefault implements UserService {
 
 
     private User getRawUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoudException(String.valueOf("username:" + username)));
+        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(String.valueOf("username:" + username)));
     }
 
     private User getRawUserById(Long userId) {
-        return userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoudException("id:" + userId));
+        return userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("id:" + userId));
     }
 
     private User getRawUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoudException("email:" + email));
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("email:" + email));
     }
 
 }

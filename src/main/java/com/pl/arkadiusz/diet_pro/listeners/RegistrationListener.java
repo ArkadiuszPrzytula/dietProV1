@@ -1,4 +1,4 @@
-package com.pl.arkadiusz.diet_pro.Listeners;
+package com.pl.arkadiusz.diet_pro.listeners;
 
 import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
 

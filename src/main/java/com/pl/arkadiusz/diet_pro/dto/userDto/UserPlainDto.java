@@ -22,7 +22,7 @@ public class UserPlainDto {
 
     private String email;
 
-  private Collection<String> name;
+    private Collection<String> graduatesName;
 
 
 }

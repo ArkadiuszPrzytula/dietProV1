@@ -1,4 +1,4 @@
-package com.pl.arkadiusz.diet_pro.Fisters;
+package com.pl.arkadiusz.diet_pro.filters;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;

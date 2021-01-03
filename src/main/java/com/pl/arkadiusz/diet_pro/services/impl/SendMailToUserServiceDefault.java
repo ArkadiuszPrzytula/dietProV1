@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -19,6 +20,7 @@ import java.util.*;
 
 
 @Service
+@Transactional
 public class SendMailToUserServiceDefault implements SendMailToUserService {
 
     private final String APP_NAME = "DietPRO";

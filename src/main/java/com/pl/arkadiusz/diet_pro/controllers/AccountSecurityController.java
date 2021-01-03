@@ -42,13 +42,18 @@ public class AccountSecurityController {
     @PostMapping("/resend-verify-token/{id}")
     public ResponseEntity<Void> resentVerifyToken(@PathVariable("id") Long id) throws MessagingException, IOException {
         UserPlainDto user = userService.getUserPlainDto(id);
-        if (!user.isEnable()) {
-            String token = userAccountService.createTokenUsername(user.getUsername());
-            URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUri();
-            sendMailToUserService.sendTokenToUserFactory(uri.getPath(), user, token, TokenType.REGISTRATION_VERIFY);
-            return ResponseEntity.created(uri).build();
+        if (checkUserIsEnabled(user)) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+
+        String token = userAccountService.createTokenUsername(user.getUsername());
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUri();
+        sendMailToUserService.sendTokenToUserFactory(uri.getPath(), user, token, TokenType.REGISTRATION_VERIFY);
+        return ResponseEntity.created(uri).build();
+    }
+
+    private boolean checkUserIsEnabled(UserPlainDto user) {
+        return !user.isEnable();
     }
 
 
@@ -82,7 +87,7 @@ public class AccountSecurityController {
 
         TokenDTO restartToken = userAccountService.getToken(token);
         userAccountService.checkTokenExpireTime(restartToken);
-        userAccountService.editUser(restartToken.getUserId(), passwordResetRequest);
+        userAccountService.changeUserPassword(restartToken.getUserId(), passwordResetRequest);
         userAccountService.clearToken(restartToken);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().replacePath("/user").path("/{id}")

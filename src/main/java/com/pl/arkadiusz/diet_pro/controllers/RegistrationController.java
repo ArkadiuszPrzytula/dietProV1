@@ -1,6 +1,6 @@
 package com.pl.arkadiusz.diet_pro.controllers;
 
-import com.pl.arkadiusz.diet_pro.Listeners.OnRegistrationCompleteEvent;
+import com.pl.arkadiusz.diet_pro.listeners.OnRegistrationCompleteEvent;
 import com.pl.arkadiusz.diet_pro.dto.userDto.UserPlainDto;
 import com.pl.arkadiusz.diet_pro.dto.userDto.UserRegisterDTO;
 import com.pl.arkadiusz.diet_pro.services.RegistrationService;
@@ -24,18 +24,15 @@ import java.net.URI;
 public class RegistrationController {
     private final RegistrationService registrationService;
 
-    private final PasswordEncoder passwordEncoder;
-
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public RegistrationController(RegistrationService registrationService, PasswordEncoder passwordEncoder, ApplicationEventPublisher applicationEventPublisher) {
+    public RegistrationController(RegistrationService registrationService, ApplicationEventPublisher applicationEventPublisher) {
         this.registrationService = registrationService;
-        this.passwordEncoder = passwordEncoder;
+
         this.applicationEventPublisher = applicationEventPublisher;
     }
-
 
     @PostMapping
     public ResponseEntity<Void> registerUser(@RequestBody @Valid UserRegisterDTO userRegisterDTO, HttpServletRequest httpServletRequest) {
@@ -49,8 +46,6 @@ public class RegistrationController {
 
         return ResponseEntity.created(uri).build();
     }
-
-
 
 
 }
